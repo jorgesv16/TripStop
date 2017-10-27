@@ -36,6 +36,7 @@ function initMap() {
 }
 
 //function that takes inputs and updates the map with a route
+
 function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination) {
 	    directionsService.route({
 	        origin: origin,
