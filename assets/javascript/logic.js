@@ -17,8 +17,9 @@ function initMap() {
 	directionsDisplay.setMap(map);
 
 	var onClickHandler = function() {
-        if ($("#user-form-pointA").value!=""&&$("#user-form-pointB").value!=""){
-       	calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").value, $("#user-form-pointB").value);
+        if ($("#user-form-pointA").val()!=""&&$("#user-form-pointB").val()!=""){
+       	console.log($("#user-form-pointA").val());
+       	calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
         }
     };
 

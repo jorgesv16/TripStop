@@ -1,0 +1,21 @@
+.jumbotron-title {
+		color: #ffffff;	
+}
+
+.jumbotron-subtitle {
+		color: #ffffff;
+}
+
+.header-background-image { 
+    
+    background-image: url("https://media.deseretdigital.com/file/7b1afa8729?type=jpeg&quality=55&c=15&a=4379240d");
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.map-placement {
+	height: 600px;
+	z-index: 5;
+}
