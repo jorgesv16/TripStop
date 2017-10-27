@@ -1,7 +1,9 @@
+//hide the info tables at the bottom
+$("#trip-info").hide();
 
 //sets up the map
 function initMap() {
-	
+
 	// Instantiate a directions service.
 	var directionsService = new google.maps.DirectionsService;
 
@@ -16,16 +18,24 @@ function initMap() {
 
 	directionsDisplay.setMap(map);
 
-	var onClickHandler = function() {
+// what happens when you submit you A and B points. Also shows/hides interface
+	var onSubmitHandler = function() {
         if ($("#user-form-pointA").val()!=""&&$("#user-form-pointB").val()!=""){
-       	console.log($("#user-form-pointA").val());
-       	calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
+       		calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
+        	
+        	$("#user-form-group").hide();
+        	$("#trip-info").show();
         }
     };
 
-    $("#calculate-route").on("click", onClickHandler());
+//click event for making a route.
+    $("#calculate-route").on("click", function(event){
+    	event.preventDefault();
+    	onSubmitHandler();
+    });
 }
 
+//function that takes inputs and updates the map with a route
 function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination) {
 	    directionsService.route({
 	        origin: origin,
@@ -38,5 +48,4 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
 	            window.alert('Directions request failed due to ' + status);
 	          }
 	        });
-	}
-
+}
