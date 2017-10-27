@@ -1,4 +1,12 @@
+//keeps track of step of the process. We start on step "directions"
+//steps: directions, place-marker, select-station
+var appState= "directions";
+
+//an array to keep track of all the markers
+var markerList= [];
+
 //hide the info tables at the bottom
+//$("#map-placement").css("display", "none");
 $("#trip-info").hide();
 
 //sets up the map
@@ -21,10 +29,12 @@ function initMap() {
 // what happens when you submit you A and B points. Also shows/hides interface
 	var onSubmitHandler = function() {
         if ($("#user-form-pointA").val()!=""&&$("#user-form-pointB").val()!=""){
-       		calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
-        	
-        	$("#user-form-group").hide();
+       		//update UI
+       		//$("#map-placement").css("display", "inline");
+       		$("#user-form-group").hide();
         	$("#trip-info").show();
+        	//Make Map
+       		calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
         }
     };
 
@@ -32,7 +42,41 @@ function initMap() {
     $("#calculate-route").on("click", function(event){
     	event.preventDefault();
     	onSubmitHandler();
+    	appState= "place-marker"
     });
+
+    //event when user clicks map
+	google.maps.event.addListener(map, 'click', function(event) {
+		if (appState=="place-marker")
+	   placeMarker(event.latLng);
+	});
+
+	//adds new markers, give them a click function and adds them to an array
+	function placeMarker(location) {
+	    var marker = new google.maps.Marker({
+	        position: location, 
+	        map: map,
+	        markerID: markerList.length
+	    });
+
+	    console.log(marker.position.lat());
+
+	    marker.addListener("click", function(event){
+		});
+
+	    markerList.push(marker);
+	    console.log(markerList);
+	}
+
+//click event for clearing all markers.
+    $("#clear-markers").on("click", function(event){
+	    for(i=0; i<markerList.length; i++){
+	        markerList[i].setMap(null);
+	    }
+	    markerList=[];
+    });
+
+//end of init map
 }
 
 //function that takes inputs and updates the map with a route
