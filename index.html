@@ -42,40 +42,49 @@
         </form>   
     </div>
     
-
     <!-- where map is dynamically entered -->
     <div class="row">
-        <div id="map" class="col map-placement" >
+        <div id="map" class="col col-sm-12 map-placement" >
         </div>
     </div>
-
+<br>
     <!-- where places are displayed, hide this until map is displayed  -->
     <div class="row">
     <div class="card col-sm-12">
         <div class="card-header">Places along route
         </div>
-
         <!-- where places are dynamically entered -->
         <div id="stops" class="card-body">
             
             <h6 class="card-title">Pitstop options:</h6>
             
         </div>
-        <div class="row">
-          <table class="table">
-            <tbody id="gas-station-info">
-              <thead>
-                <tr><td><strong>Station Name</strong></td><td><strong>Address</strong></td><td><strong>Phone Number</strong></td><td><strong>Distance</strong></td><td><strong>Rating</strong></td></tr>
-              </thead>
-            </tbody>
-          </table>
-        </div>
+        <!-- container of the two list boxes -->
+        <div class="row list-item-container">
+        <!-- div holding gas station list -->
+            <div class="col col-sm-12 info-list-border div-scroll">
+              <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td><strong>#</strong></td>
+                            <td><strong>Distance</strong></td>
+                            <td><strong>TripStop Rating</strong></td>
+                            <td><strong>List of Gas Stations</strong></td>
+                            <td><strong>Restaurants</strong></td>
+                            <td><strong>Select/Remove</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody id="gas-station-info">
+                    </tbody>
+              </table>
+            </div>
+            </div>
     </div> 
     </div>   
 </div>  
         
 <script src="https://code.jquery.com/jquery.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaQUM234KkHw3DQu6jRJoBsMSil61PC_k&callback=initMap&libraries=geometry,places" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAemRhUsJJDsaDiF2WhbTyn0rYduo3luOA&callback=initMap&libraries=geometry,places" async defer></script>
 <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
 <script type="text/javascript" src="assets/javascript/logic.js"></script>
 </body>
