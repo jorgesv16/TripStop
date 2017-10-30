@@ -1,11 +1,9 @@
 .jumbotron-title {
-		color: #ffffff;	
+        color: #ffffff; 
 }
-
 .jumbotron-subtitle {
-		color: #ffffff;
+        color: #ffffff;
 }
-
 .header-background-image { 
     
     background-image: url("https://media.deseretdigital.com/file/7b1afa8729?type=jpeg&quality=55&c=15&a=4379240d");
@@ -14,8 +12,91 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
-
 .map-placement {
-	height: 600px;
-	z-index: 5;
+    min-height: 300px;
+    
+}
+.map-size {
+    min-height: 300px;
+}
+.card-title-text {
+    color: #ffffff;
+    font-size: 24px;
+}
+.table-text {
+    font-size: 16px;
+    color: #000000;
+}
+.div-scroll {
+    overflow: scroll;
+    
+}
+.list-item-container {
+max-height: 300px;
+}
+.list-of-gas {
+    color: blue
+}
+.list-of-gas:hover {
+    color: #ffffff;
+    background-color: blue;
+}
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+    .list-item-container, .map-placement{
+        height: 200px;
+    }
+@media only screen and (min-width : 321px) {
+    .list-item-container, .map-placement{
+        height: 200px;
+    }
+}
+@media only screen and (max-width : 320px) {
+    .list-item-container, .map-placement{
+        height: 200px;
+    }
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+    .list-item-container, .map-placement{
+        height: 350px;
+    }
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+    .list-item-container, .map-placement{
+        height: 350px;
+    }
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    .list-item-container, .map-placement{
+        height: 350px;
+    }
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
+    .list-item-container, .map-placement{
+        height: 350px;
+    }
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
+    .list-item-container, .map-placement{
+        height: 350px;
+    }
+}
+@media only screen  and (min-width : 1224px) {
+    .list-item-container, .map-placement{
+        height: 600px;
+    }
+}
+@media only screen  and (min-width : 1824px) {
+    .list-item-container, .map-placement{
+        height: 200px;
+    }
+}
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
+    .list-item-container, .map-placement{
+        height: 200px;
+    }
+}
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
+    .list-item-container, .map-placement{
+        height: 200px;
+    }
 }
