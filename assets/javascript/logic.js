@@ -12,7 +12,7 @@ firebase.initializeApp(config);
 
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
-var appState = "directions";
+var appState = "place-marker";
 
 //an array to keep track of all the markers
 var markerNum = 0;
@@ -21,7 +21,9 @@ var markerList= [];
 
 var ratingArr = [];
 
-var gasStationsObj = [];
+var gasStations = {};
+
+var gasList = [];
 
 var waypts = [];
 //hide the info tables at the bottom
@@ -46,10 +48,6 @@ function initMap() {
 	directionsDisplay.setMap(map);
 
 	var service = new google.maps.places.PlacesService(map);
-
-	// var infowindow = new google.maps.InfoWindow();
-
-	// var geocoder = new google.maps.Geocoder;
 
 	// what happens when you submit you A and B points. Also shows/hides interface
 	var onSubmitHandler = function() {
@@ -102,10 +100,10 @@ function initMap() {
 		    location: newLocation,
 		    // location: {lat: 38.582, lng: -121.482},
 		    // location: latlng,
-		    radius: 1000,
+		    radius: 5000,
 		    type: ['gas_station']
 		}, callback);
-		  // restaurant search
+		// restaurant search
 		// service.nearbySearch({
 		  
 		//   	// get info on last pushed point
@@ -169,7 +167,6 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
 	        });
 }
 
-
 // appends info of gas station review, location, overall TripStop review, and collapse button including restaurant information
 function callback(results, status) {
   	
@@ -199,8 +196,15 @@ function callback(results, status) {
 				gasStationReviews = results[i].rating;
 				ratingArr.push(gasStationReviews);
 			}
-			// name of gas stations
-		    gasStationsObj.push(results[i].name);   
+			gasStations = "";
+
+            gasStations = {};
+
+            gasStations.gasName = results[i].name;
+            gasStations.rating = results[i].rating;
+            gasStations.place = results[i].place_id;
+
+            gasList.push(gasStations);  
 		}
 
 		// rating averages
@@ -208,11 +212,33 @@ function callback(results, status) {
 		ratingArr = ratingArr.reduce((previous, current) => current += previous);
 		ratingArr /= ratingArrLength;
 
+		// dynamic dropdown creation
+		var dropDown = $("<div>");
+        dropDown.addClass("dropdown");
+        var btn = $("<button>");
+        btn.attr("class", "btn btn-primary dropdown-toggle");
+        btn.attr("type", "button");
+        btn.attr("data-toggle", "dropdown");
+        btn.text("Choose a Gas Station");
+        dropDown.append(btn);
+        var dropList = $("<ul>");
+        dropList.addClass("dropdown-menu");
+
+        for (var i = 0; i < results.length; i++) {
+            var listItem = $("<li>");
+            listItem.addClass("list-of-gas");
+            listItem.append(gasList[i].gasName + ", Rating: " + gasList[i].rating);
+            listItem.attr("data-place", gasList[i].place);
+            dropList.append(listItem);
+        }
+
+        dropDown.append(dropList);
+
 		tableTr = $("<tr>");
 		tableTr.append("<td>" + markerNum + "</td>");
 	    tableTr.append("<td>" + "distance" + "</td>");
 	    tableTr.append("<td>" + ratingArr + "</td>");
-	    tableTr.append("<td>" + "gasStations" + "</td>");
+	    tableTr.append("<td>" + dropDown[0].innerHTML + "</td>");
 	    tableTr.append("<td id='restaurants'" + markerNum + "></td>");
 	    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>" + "select" + "</button><button id='remove' class='btn btn-danger' type='button'>" + "remove" + "</button></td>");
 		
@@ -221,7 +247,8 @@ function callback(results, status) {
 		$("#gas-station-info").append(tableTr);	
 		debugger; 
 		// to clear ratingArrLength 
-		ratingArr = [];  
+		ratingArr = []; 
+		gasList = []; 
 	}
 	else {
 		alert:"ugh";
@@ -229,30 +256,28 @@ function callback(results, status) {
 }
 
 // to add restaurants to page
-function callback2(results, status) {
-  	restaurantsArr = [];
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      	for (var i = 0; i < results.length; i++) {
-   		debugger;
-      	console.log(results[i]);
-      	restaurantsArr.push(results[i].name);
-      	
-          
-	  }
-	$("#restaurants" + markerNum "").append(restaurantsArr);
-	}
-	else {
-		alert:"ugh";
-	}
-}
+// function callback2(results, status) {
+//   	restaurantsArr = [];
+//     if (status === google.maps.places.PlacesServiceStatus.OK) {
+//       	for (var i = 0; i < results.length; i++) {
+//    		debugger;
+//       	console.log(results[i]);
+//       	restaurantsArr.push(results[i].name);
+// 	else {
+// 		alert:"ugh";
+// 	}
+// }
 
-$(document.body).on('click', 'a', function() {
-	service.nearbySearch({
-	   	// get info on last pushed point
-	    location: newLocation,
-	    // location: {lat: 38.582, lng: -121.482},
-	    // location: latlng,
-	    radius: 5000,
-	    type: ['restaurant']
-	}, callback2);	
+$(document.body).on('click', '.list-of-gas', function() {
+	console.log(this);
+
+	$("#restaurants" + markerNum + "").show();
+	// service.nearbySearch({
+	//    	// get info on last pushed point
+	//     location: newLocation,
+	//     // location: {lat: 38.582, lng: -121.482},
+	//     // location: latlng,
+	//     radius: 5000,
+	//     type: ['restaurant']
+	// }, callback2);	
 })	
