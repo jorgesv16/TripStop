@@ -8,34 +8,24 @@ var config = {
 	messagingSenderId: "942613125163"
 };
 firebase.initializeApp(config);
-
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
 var appState = "place-marker";
 //an array to keep track of all the markers
 var markerNum = 0;
-
 var markerList= [];
-
 var ratingArr = [];
-
 var gasStations = {};
-
 var gasList = [];
-
 var waypts = [];
 //hide the info tables at the bottom
 $("#trip-info").hide();
-
 //sets up the map
 function initMap() {
-	
 	// Instantiate a directions service.
 	var directionsService = new google.maps.DirectionsService;
-
 	// Create a renderer for directions and bind it to the map.
 	var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
-
 	// Create a map.
 	var map = new google.maps.Map(document.getElementById("map"), {
           zoom: 13,
@@ -187,6 +177,7 @@ function callback(results, status) {
 			var ratingArrLength = ratingArr.length;
 			ratingArr = ratingArr.reduce((previous, current) => current += previous);
 			ratingArr /= ratingArrLength;
+			ratingArr = ratingArr.toFixed(2);
 		}
 		else {
 			ratingArr = "No reviews";
