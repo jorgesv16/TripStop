@@ -60,6 +60,7 @@ $("#signOutBtn").on("click", function(){
 })
 
 //END ACCOUNT VERIFICATION
+
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
 var appState = "place-marker";
@@ -138,12 +139,14 @@ function initMap() {
 		    // radius in meters
 		    radius: 3000,
 		    // type it looks for are gas stations
+
 		    type: ['restaurant']
 		}, callback2);
 	}
 	//click event for clearing all markers.
     $("#clear-markers").on("click", function(event) {
 	    for(i=0; i<markerList.length; i++){
+
 	        markerList[i].setMap(null);
 	    }
 	    // waypts are essentially detours that the user can set up
@@ -277,6 +280,20 @@ function callback(results, status) {
 	else {
 		console.log("No places found");
 	}
+
+}
+
+function renderTable(markerNum, ratingAvg, dropDown, markerNum) {
+	tableTr = $("<tr>");
+	tableTr.attr("class", markerNum);
+	tableTr.append("<td>" + markerNum + "</td>");
+    tableTr.append("<td>" + "distance" + "</td>");
+    tableTr.append("<td>" + ratingAvg + "</td>");
+    tableTr.append("<td>" + dropDown + "</td>");
+    tableTr.append("<td id='restaurants'" + markerNum + "></td>");
+    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>" + "select" + "</button><button id='remove' class='btn btn-danger' type='button'>" + "remove" + "</button></td>");
+	
+	$("#gas-station-info").append(tableTr);	
 }
 // to add restaurants to page
 function callback2(results, status) {
