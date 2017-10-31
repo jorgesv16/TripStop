@@ -9,13 +9,14 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
 var appState = "place-marker";
 
 //an array to keep track of all the markers
 var markerNum = 0;
+
+var counter = 0;
 
 var markerList= [];
 
@@ -85,14 +86,10 @@ function initMap() {
 	        markerID: markerList.length
 	    });
 
-	    console.log(marker.position.lat());
-
 	    markerList.push(marker);
-	    console.log(markerList);
 
 	    // function to get place info from markers
 	    var newLocation = {lat: markerList[markerList.length-1].position.lat(), lng: markerList[markerList.length-1].position.lng()};
-	    debugger;
 	    // gas station search
 		service.nearbySearch({
 		  
@@ -104,15 +101,14 @@ function initMap() {
 		    type: ['gas_station']
 		}, callback);
 		// restaurant search
-		// service.nearbySearch({
-		  
-		//   	// get info on last pushed point
-		//     location: newLocation,
-		//     // location: {lat: 38.582, lng: -121.482},
-		//     // location: latlng,
-		//     radius: 1000,
-		//     type: ['restaurant']
-		// }, callback2);
+		service.nearbySearch({
+		  	// get info on last pushed point
+		    location: newLocation,
+		    // location: {lat: 38.582, lng: -121.482},
+		    // location: latlng,
+		    radius: 1000,
+		    type: ['restaurant']
+		}, callback2);
 	}
 
 	//click event for clearing all markers.
@@ -127,7 +123,6 @@ function initMap() {
 
 	// if waypoint is selected, change route
 	$(document.body).on('click', '#select', function() {
-		debugger;
 		waypts.push({
 			location: address,
 	        stopover: true
@@ -145,26 +140,32 @@ function initMap() {
 		$(this).parentsUntil("tbody").empty();
 		
 	})
+
+	$(document.body).on('click', '.list-of-gas', function() {
+		console.log($(this));
+		numberForRestaurants = $(this).data("marker")
+
+		$("#restaurants" + numberForRestaurants).text(restaurantsArr).show();
+	})	
 //end of init map
 }
 
 //function that takes inputs and updates the map with a route along with waypoints
 function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination, waypoints) {
-	debugger;
-	    directionsService.route({
-	        origin: origin,
-	        destination: destination,
-	        waypoints: waypts,
-	        optimizeWaypoints: true,
-	        travelMode: 'DRIVING'
-	        }, function(response, status) {
-		        if (status === 'OK') {
-		        	debugger;
-		            directionsDisplay.setDirections(response);
-		        } else {
-		            window.alert('Directions request failed due to ' + status);
-		        }
-	        });
+    directionsService.route({
+        origin: origin,
+        destination: destination,
+        waypoints: waypts,
+        optimizeWaypoints: true,
+        travelMode: 'DRIVING'
+    }, function(response, status) {
+        if (status === 'OK') {
+        	debugger;
+            directionsDisplay.setDirections(response);
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+    });
 }
 
 // appends info of gas station review, location, overall TripStop review, and collapse button including restaurant information
@@ -174,7 +175,6 @@ function callback(results, status) {
         for (var i = 0; i < results.length; i++) {
         	// results[i] is one gas station 
 	   		debugger;
-	      	console.log(results[i]);
 			
 			address = results[i].vicinity;
 			if ("opening_hours" in results[i]){
@@ -207,18 +207,26 @@ function callback(results, status) {
             gasList.push(gasStations);  
 		}
 
-		// rating averages
-		var ratingArrLength = ratingArr.length;
-		ratingArr = ratingArr.reduce((previous, current) => current += previous);
-		ratingArr /= ratingArrLength;
-
+		// rating averages, if is for if there is no rating, ignore
+		if(ratingArr) {
+			var ratingArrLength = ratingArr.length;
+			ratingArr = ratingArr.reduce((previous, current) => current += previous);
+			ratingArr /= ratingArrLength;
+		}
+		else {
+			ratingArr = "No reviews";
+		}
 		// dynamic dropdown creation
 		var dropDown = $("<div>");
         dropDown.addClass("dropdown");
         var btn = $("<button>");
-        btn.attr("class", "btn btn-primary dropdown-toggle");
-        btn.attr("type", "button");
-        btn.attr("data-toggle", "dropdown");
+        btn.attr({
+        	"class": "btn btn-primary dropdown-toggle",
+        	"type": "button",
+        	"data-toggle": "dropdown"
+        });
+        // btn.attr("type", "button");
+        // btn.attr("data-toggle", "dropdown");
         btn.text("Choose a Gas Station");
         dropDown.append(btn);
         var dropList = $("<ul>");
@@ -228,7 +236,10 @@ function callback(results, status) {
             var listItem = $("<li>");
             listItem.addClass("list-of-gas");
             listItem.append(gasList[i].gasName + ", Rating: " + gasList[i].rating);
-            listItem.attr("data-place", gasList[i].place);
+            listItem.attr({
+            	"data-place": gasList[i].place,
+            	"data-marker": markerNum
+        	});
             dropList.append(listItem);
         }
 
@@ -236,16 +247,14 @@ function callback(results, status) {
 
 		tableTr = $("<tr>");
 		tableTr.append("<td>" + markerNum + "</td>");
-	    tableTr.append("<td>" + "distance" + "</td>");
 	    tableTr.append("<td>" + ratingArr + "</td>");
 	    tableTr.append("<td>" + dropDown[0].innerHTML + "</td>");
-	    tableTr.append("<td id='restaurants'" + markerNum + "></td>");
-	    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>" + "select" + "</button><button id='remove' class='btn btn-danger' type='button'>" + "remove" + "</button></td>");
+	    tableTr.append("<td id='restaurants" + markerNum + "'></td>");
+	    debugger;
+	    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>✓</button><button id='remove' class='btn btn-danger' type='button'>X</button></td>");
 		
-		// tableTr.data("markerID", marker);
 		// append to html id train table
-		$("#gas-station-info").append(tableTr);	
-		debugger; 
+		$("#gas-station-info").append(tableTr);	 
 		// to clear ratingArrLength 
 		ratingArr = []; 
 		gasList = []; 
@@ -256,28 +265,17 @@ function callback(results, status) {
 }
 
 // to add restaurants to page
-// function callback2(results, status) {
-//   	restaurantsArr = [];
-//     if (status === google.maps.places.PlacesServiceStatus.OK) {
-//       	for (var i = 0; i < results.length; i++) {
-//    		debugger;
-//       	console.log(results[i]);
-//       	restaurantsArr.push(results[i].name);
-// 	else {
-// 		alert:"ugh";
-// 	}
-// }
-
-$(document.body).on('click', '.list-of-gas', function() {
-	console.log(this);
-
-	$("#restaurants" + markerNum + "").show();
-	// service.nearbySearch({
-	//    	// get info on last pushed point
-	//     location: newLocation,
-	//     // location: {lat: 38.582, lng: -121.482},
-	//     // location: latlng,
-	//     radius: 5000,
-	//     type: ['restaurant']
-	// }, callback2);	
-})	
+function callback2(results, status) {
+  	restaurantsArr = [];
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      	for (var i = 0; i < results.length; i++) {
+	   		debugger;
+	      	restaurantsArr.push(results[i].name + ", Rating: " + results[i].rating);
+	      	$("#restaurants" + markerNum).text(restaurantsArr).hide();
+	      	debugger;
+	    }
+	}    	
+	else {
+		alert:"ugh";
+	}
+}
