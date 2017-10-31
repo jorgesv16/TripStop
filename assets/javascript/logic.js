@@ -9,13 +9,14 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
 var appState = "place-marker";
 
 //an array to keep track of all the markers
 var markerNum = 0;
+
+var counter = 0;
 
 var markerList= [];
 
@@ -85,14 +86,10 @@ function initMap() {
 	        markerID: markerList.length
 	    });
 
-	    console.log(marker.position.lat());
-
 	    markerList.push(marker);
-	    console.log(markerList);
 
 	    // function to get place info from markers
 	    var newLocation = {lat: markerList[markerList.length-1].position.lat(), lng: markerList[markerList.length-1].position.lng()};
-	    debugger;
 	    // gas station search
 		service.nearbySearch({
 		  
@@ -104,20 +101,19 @@ function initMap() {
 		    type: ['gas_station']
 		}, callback);
 		// restaurant search
-		// service.nearbySearch({
-		  
-		//   	// get info on last pushed point
-		//     location: newLocation,
-		//     // location: {lat: 38.582, lng: -121.482},
-		//     // location: latlng,
-		//     radius: 1000,
-		//     type: ['restaurant']
-		// }, callback2);
+		service.nearbySearch({
+		  	// get info on last pushed point
+		    location: newLocation,
+		    // location: {lat: 38.582, lng: -121.482},
+		    // location: latlng,
+		    radius: 1000,
+		    type: ['restaurant']
+		}, callback2);
 	}
 
 	//click event for clearing all markers.
     $("#clear-markers").on("click", function(event){
-	    for(i=0; i<markerList.length; i++){
+	    for(i=0; i<markerList.length; i++) {
 	        markerList[i].setMap(null);
 	    }
 	    markerList = [];
@@ -127,7 +123,6 @@ function initMap() {
 
 	// if waypoint is selected, change route
 	$(document.body).on('click', '#select', function() {
-		debugger;
 		waypts.push({
 			location: address,
 	        stopover: true
@@ -145,12 +140,17 @@ function initMap() {
 		$(this).parentsUntil("tbody").empty();
 		
 	})
+
+	$(document.body).on('click', '.list-of-gas', function() {
+		numberForRestaurants = $(this).data("marker")
+
+		$("#restaurants" + numberForRestaurants).text(restaurantsArr).show();
+	})	
 //end of init map
 }
 
 //function that takes inputs and updates the map with a route along with waypoints
 function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination, waypoints) {
-	debugger;
 	    directionsService.route({
 	        origin: origin,
 	        destination: destination,
@@ -159,7 +159,6 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
 	        travelMode: 'DRIVING'
 	        }, function(response, status) {
 		        if (status === 'OK') {
-		        	debugger;
 		            directionsDisplay.setDirections(response);
 		        } else {
 		            window.alert('Directions request failed due to ' + status);
@@ -173,8 +172,7 @@ function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
         	// results[i] is one gas station 
-	   		debugger;
-	      	console.log(results[i]);
+	   		//debugger;
 			
 			address = results[i].vicinity;
 			if ("opening_hours" in results[i]){
@@ -188,7 +186,7 @@ function callback(results, status) {
 			else {
 				open = "Call number to check hours"; 
 			}	
-			debugger;
+			//debugger;
 			// distance = results.placeid compares with point A placeid OR us results.geometry.location.lat()
 			
 			// rating func
@@ -202,50 +200,66 @@ function callback(results, status) {
 
             gasStations.gasName = results[i].name;
             gasStations.rating = results[i].rating;
-            gasStations.place = results[i].place_id;
+            gasStations.coordinates = [results[i].geometry.location.lat(), results[i].geometry.location.lng()]
 
             gasList.push(gasStations);  
 		}
 
-		// rating averages
-		var ratingArrLength = ratingArr.length;
-		ratingArr = ratingArr.reduce((previous, current) => current += previous);
-		ratingArr /= ratingArrLength;
-
+		// rating averages, if is for if there is no rating, ignore
+		if(ratingArr) {
+			var ratingArrLength = ratingArr.length;
+			ratingArr = ratingArr.reduce((previous, current) => current += previous);
+			ratingArr /= ratingArrLength;
+			var ratingAvg = ratingArr.toFixed(1);
+		}
+		else {
+			var ratingAvg = "No reviews";
+		}
 		// dynamic dropdown creation
 		var dropDown = $("<div>");
         dropDown.addClass("dropdown");
         var btn = $("<button>");
-        btn.attr("class", "btn btn-primary dropdown-toggle");
-        btn.attr("type", "button");
-        btn.attr("data-toggle", "dropdown");
+        btn.attr({
+        	"class": "btn btn-primary dropdown-toggle",
+        	"type": "button",
+        	"data-toggle": "dropdown"
+        });
         btn.text("Choose a Gas Station");
         dropDown.append(btn);
         var dropList = $("<ul>");
-        dropList.addClass("dropdown-menu");
+        dropList.attr("class", "dropdown-menu scrollable-menu");
 
         for (var i = 0; i < results.length; i++) {
             var listItem = $("<li>");
             listItem.addClass("list-of-gas");
             listItem.append(gasList[i].gasName + ", Rating: " + gasList[i].rating);
-            listItem.attr("data-place", gasList[i].place);
+            listItem.attr({
+            	"data-coordinates": gasList[i].coordinates,
+            	"data-marker": markerNum
+            });
             dropList.append(listItem);
         }
 
         dropDown.append(dropList);
 
-		tableTr = $("<tr>");
-		tableTr.append("<td>" + markerNum + "</td>");
-	    tableTr.append("<td>" + "distance" + "</td>");
-	    tableTr.append("<td>" + ratingArr + "</td>");
-	    tableTr.append("<td>" + dropDown[0].innerHTML + "</td>");
-	    tableTr.append("<td id='restaurants'" + markerNum + "></td>");
-	    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>" + "select" + "</button><button id='remove' class='btn btn-danger' type='button'>" + "remove" + "</button></td>");
-		
-		// tableTr.data("markerID", marker);
-		// append to html id train table
-		$("#gas-station-info").append(tableTr);	
-		debugger; 
+        renderTable(markerNum, ratingAvg, dropDown[0].innerHTML, markerNum);
+
+
+
+        $(document.body).on('click', '.list-of-gas', function(event) {
+
+			$("."+markerNum ).empty();
+
+			var name = event.toElement.innerText.split(",");
+			name = name[0];
+			btn.text(name);
+			var coordinates = event.toElement.dataset.coordinates;
+			console.log(coordinates);
+
+			renderTable(markerNum, ratingAvg, dropDown[0].innerHTML, markerNum);
+
+		});
+
 		// to clear ratingArrLength 
 		ratingArr = []; 
 		gasList = []; 
@@ -253,31 +267,33 @@ function callback(results, status) {
 	else {
 		alert:"ugh";
 	}
+
+}
+
+function renderTable(markerNum, ratingAvg, dropDown, markerNum) {
+	tableTr = $("<tr>");
+	tableTr.attr("class", markerNum);
+	tableTr.append("<td>" + markerNum + "</td>");
+    tableTr.append("<td>" + "distance" + "</td>");
+    tableTr.append("<td>" + ratingAvg + "</td>");
+    tableTr.append("<td>" + dropDown + "</td>");
+    tableTr.append("<td id='restaurants'" + markerNum + "></td>");
+    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>" + "select" + "</button><button id='remove' class='btn btn-danger' type='button'>" + "remove" + "</button></td>");
+	
+	$("#gas-station-info").append(tableTr);	
 }
 
 // to add restaurants to page
-// function callback2(results, status) {
-//   	restaurantsArr = [];
-//     if (status === google.maps.places.PlacesServiceStatus.OK) {
-//       	for (var i = 0; i < results.length; i++) {
-//    		debugger;
-//       	console.log(results[i]);
-//       	restaurantsArr.push(results[i].name);
-// 	else {
-// 		alert:"ugh";
-// 	}
-// }
+function callback2(results, status) {
+  	restaurantsArr = [];
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      	for (var i = 0; i < results.length; i++) {
+	      	restaurantsArr.push(results[i].name + ", Rating: " + results[i].rating);
+	      	$("#restaurants" + markerNum).text(restaurantsArr).hide();
+	    }
+	}    	
+	else {
+		alert:"ugh";
+	}
+}
 
-$(document.body).on('click', '.list-of-gas', function() {
-	console.log(this);
-
-	$("#restaurants" + markerNum + "").show();
-	// service.nearbySearch({
-	//    	// get info on last pushed point
-	//     location: newLocation,
-	//     // location: {lat: 38.582, lng: -121.482},
-	//     // location: latlng,
-	//     radius: 5000,
-	//     type: ['restaurant']
-	// }, callback2);	
-})	
