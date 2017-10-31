@@ -128,7 +128,7 @@ function initMap() {
 			restaurantsArr = restaurantsArr.join(" | ");
 			$("#restaurants" + numberForRestaurants).text(restaurantsArr);
 			// jQuery UI used
-			$("#restaurants" + numberForRestaurants).effect("bounce", "slow");
+			$("#restaurants" + numberForRestaurants).effect("shake");
 		}	
 	})	
 //end of init map
@@ -232,7 +232,7 @@ function callback2(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       	for (var i = 0; i < results.length; i++) {
 	      	restaurantsArr.push(results[i].name + ": Rating " + results[i].rating);
-	      	// to add on to review array
+	      	// to add on to review array, checks if it exists
 	      	if (results[i].rating) {
 	      		ratingArr.push(results[i].rating);
 	      	}	
