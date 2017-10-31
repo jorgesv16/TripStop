@@ -169,7 +169,7 @@ function callback(results, status) {
 			}	
 			// rating func for tripStop overall review
 			if (results[i].rating) {
-				
+				debugger;
 				ratingArr.push(results[i].rating);
 			}
 			// to get info from gas stations such as names for dropdown button
@@ -233,7 +233,10 @@ function callback2(results, status) {
       	for (var i = 0; i < results.length; i++) {
 	      	restaurantsArr.push(results[i].name + ": Rating " + results[i].rating);
 	      	// to add on to review array
-	      	ratingArr.push(results[i].rating);
+	      	if (results[i].rating) {
+	      		ratingArr.push(results[i].rating);
+	      	}	
+	      	debugger;
 	      	$("#restaurants" + markerNum).text("");
 	    }
 	    // averages ratings for overall review
