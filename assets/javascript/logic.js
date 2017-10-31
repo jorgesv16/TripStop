@@ -14,88 +14,6 @@ firebase.initializeApp(config);
 
 
 
-var provider = new firebase.auth.GoogleAuthProvider();
-
-firebase.auth().signInWithRedirect(provider);
-
-firebase.auth().getRedirectResult().then(function(result) {
-  if (result.credential) {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = result.credential.accessToken;
-    // ...
-  }
-  // The signed-in user info.
-  var user = result.user;
-}).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // The email of the user's account used.
-  var email = error.email;
-  // The firebase.auth.AuthCredential type that was used.
-  var credential = error.credential;
-  // ...
-});
-
-// function login() {
-// 	function newLoginHappened(user) {
-// 		if (user) {
-// 			app(user);
-// 		} else {
-// 			var provider = new firebase.auth.GoogleAuthProvider();
-// 			firebase.auth().signInWithRedirect(provider);
-// 		}	
-// 	}
-
-// 	firebase.auth().onAuthStateChanged(newLoginHappened);
-// }
-
-
-// function app(user) {
-// 	document.getElementById("clientName").innerHTML = user.displayName;
-// }
-
-// window.onload = login;
-// google auth
-// function callGoogleSignIn() {
-// $("callGoogleSignIn").on("click", function(event){
-//     event.preventDefault();
-//     var provider = new firebase.auth.GoogleAuthProvider();
-//       firebase.auth().signInWithRedirect(provider).then(function (result) {
-//             var token = result.credential.accessToken;
-//             // The signed-in user info.
-//             var user = result.user;
-           
-//         });
-//         firebase.auth().getRedirectResult().then(function (result) {
-//             if (result.credential) {
-//                 var token = result.credential.accessToken;
-//             }
-//             // The signed-in user info.
-//             var user = result.user;
-//             var provider = new firebase.auth.GoogleAuthProvider();
-//             provider.addScope('profile');
-//             provider.addScope('email');
-//             firebase.auth().signInWithRedirect(provider);
-//         }).catch(function (error) {
-//         });
-// });
-// }
-// firebase.auth().signOut().then(function() {
-//   // Sign-out successful.
-// }).catch(function(error) {
-//   // An error happened.
-// });
-// var user = firebase.auth().currentUser;
-// if (user != null) {
-//   user.providerData.forEach(function (profile) {
-//     console.log("Sign-in provider: "+profile.providerId);
-//     console.log("  Provider-specific UID: "+profile.uid);
-//     console.log("  Name: "+profile.displayName);
-//     console.log("  Email: "+profile.email);
-//     console.log("  Photo URL: "+profile.photoURL);
-//   });
-// }
 
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
@@ -144,7 +62,6 @@ function initMap() {
        		//update UI
        		//$("#map-placement").css("display", "inline");
        		$("#user-form-group").hide();
-        	$("#trip-info").show();
         	//Make Map
        		calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
         }
@@ -204,6 +121,7 @@ function initMap() {
 	    for(i=0; i<markerList.length; i++){
 	        markerList[i].setMap(null);
 	    }
+	    waypts = [];
 	    markerList = [];
 	    $("#gas-station-info").empty();
     });
@@ -233,7 +151,8 @@ function initMap() {
 		console.log($(this));
 		numberForRestaurants = $(this).data("marker")
 
-		$("#restaurants" + numberForRestaurants).text(restaurantsArr).show();
+		$("#restaurants" + numberForRestaurants).text(restaurantsArr);
+		$("#restaurants" + numberForRestaurants).effect("bounce", "slow");
 	})	
 //end of init map
 }
@@ -251,7 +170,8 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
         	debugger;
             directionsDisplay.setDirections(response);
         } else {
-            window.alert('Directions request failed due to ' + status);
+        	
+            console.log('Directions request failed due to ' + status);
         }
     });
 }
@@ -276,7 +196,6 @@ function callback(results, status) {
 			else {
 				open = "Call number to check hours"; 
 			}	
-			debugger;
 			// distance = results.placeid compares with point A placeid OR us results.geometry.location.lat()
 			
 			// rating func
@@ -313,12 +232,10 @@ function callback(results, status) {
         	"type": "button",
         	"data-toggle": "dropdown"
         });
-        // btn.attr("type", "button");
-        // btn.attr("data-toggle", "dropdown");
         btn.text("Choose a Gas Station");
         dropDown.append(btn);
         var dropList = $("<ul>");
-        dropList.addClass("dropdown-menu");
+        dropList.addClass("dropdown-menu scrollable-menu");
 
         for (var i = 0; i < results.length; i++) {
             var listItem = $("<li>");
@@ -348,7 +265,7 @@ function callback(results, status) {
 		gasList = []; 
 	}
 	else {
-		alert:"ugh";
+		console.log("Error");
 	}
 }
 
@@ -359,11 +276,11 @@ function callback2(results, status) {
       	for (var i = 0; i < results.length; i++) {
 	   		debugger;
 	      	restaurantsArr.push(results[i].name + ", Rating: " + results[i].rating);
-	      	$("#restaurants" + markerNum).text(restaurantsArr).hide();
+	      	$("#restaurants" + markerNum).text("");
 	      	debugger;
 	    }
 	}    	
 	else {
-		alert:"ugh";
+		console.log("Error");
 	}
 }
