@@ -58,6 +58,7 @@ function initMap() {
 	});
 	//adds new markers, give them a click function and adds them to an array
 	function placeMarker(location) {
+		ratingArr = [];
 		markerNum++; 
 	    var marker = new google.maps.Marker({
 	        position: location, 
@@ -74,7 +75,7 @@ function initMap() {
 		  	// get info on last pushed point
 		    location: newLocation,
 		    // radius in meters
-		    radius: 1000,
+		    radius: 3000,
 		    // type it looks for are gas stations
 		    type: ['gas_station']
 		}, callback);
@@ -83,7 +84,7 @@ function initMap() {
 		  	// get info on last pushed point
 		    location: newLocation,
 		    // radius in meters
-		    radius: 5000,
+		    radius: 3000,
 		    // type it looks for are gas stations
 		    type: ['restaurant']
 		}, callback2);
@@ -120,10 +121,15 @@ function initMap() {
     	$(this).parent().parent().find("button").attr("data-place", $(this).attr("data-place"));
 		console.log($(this));
 		numberForRestaurants = $(this).data("marker");
-		restaurantsArr = restaurantsArr.join(" | ");
-		$("#restaurants" + numberForRestaurants).text(restaurantsArr);
-		// jQuery UI used
-		$("#restaurants" + numberForRestaurants).effect("bounce", "slow");
+		if (restaurantsArr === "") {
+			restaurantsArr = "No nearby restaurants"
+		}
+		else {
+			restaurantsArr = restaurantsArr.join(" | ");
+			$("#restaurants" + numberForRestaurants).text(restaurantsArr);
+			// jQuery UI used
+			$("#restaurants" + numberForRestaurants).effect("bounce", "slow");
+		}	
 	})	
 //end of init map
 }
@@ -161,8 +167,9 @@ function callback(results, status) {
 			else {
 				open = "Call number to check hours"; 
 			}	
-			// rating func for tripStop
+			// rating func for tripStop overall review
 			if (results[i].rating) {
+				
 				ratingArr.push(results[i].rating);
 			}
 			// to get info from gas stations such as names for dropdown button
@@ -172,17 +179,6 @@ function callback(results, status) {
             gasStations.place = results[i].vicinity;
             gasList.push(gasStations);  
 		}
-		// rating averages, if is for if there is no rating, ignore
-		if (ratingArr) {
-			var ratingArrLength = ratingArr.length;
-			ratingArr = ratingArr.reduce((previous, current) => current += previous);
-			ratingArr /= ratingArrLength;
-			ratingArr = ratingArr.toFixed(2);
-		}
-		else {
-			ratingArr = "No reviews";
-		}
-		// dynamic dropdown creation
 		var dropDown = $("<div>");
         dropDown.addClass("dropdown");
         var btn = $("<button>");
@@ -215,7 +211,7 @@ function callback(results, status) {
         // appends data such as ratings and dropdown to html
 		tableTr = $("<tr>");
 		tableTr.append("<td>" + markerNum + "</td>");
-	    tableTr.append("<td>" + ratingArr + "</td>");
+	    tableTr.append("<td id='tripStopReview" + markerNum + "'></td>");
 	    tableTr.append("<td>" + dropDown[0].innerHTML + "</td>");
 	    tableTr.append("<td id='restaurants" + markerNum + "'></td>");
 	    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>✓</button><button id='remove' class='btn btn-danger' type='button'>X</button></td>");
@@ -223,7 +219,7 @@ function callback(results, status) {
 		// append to html id train table
 		$("#gas-station-info").append(tableTr);	 
 		// to clear ratingArrLength 
-		ratingArr = []; 
+		// ratingArr = []; 
 		gasList = []; 
 	}
 	else {
@@ -236,8 +232,22 @@ function callback2(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       	for (var i = 0; i < results.length; i++) {
 	      	restaurantsArr.push(results[i].name + ": Rating " + results[i].rating);
+	      	// to add on to review array
+	      	ratingArr.push(results[i].rating);
 	      	$("#restaurants" + markerNum).text("");
 	    }
+	    // averages ratings for overall review
+		if (ratingArr) {
+			var ratingArrLength = ratingArr.length;
+			ratingArr = ratingArr.reduce((previous, current) => current += previous);
+			ratingArr /= ratingArrLength;
+			ratingArr = ratingArr.toFixed(2);
+			console.log(ratingArr);
+			$("#tripStopReview" + markerNum).text(ratingArr);
+		}
+		else {
+			ratingArr = "No reviews";
+		}
 	}    	
 	else {
 		console.log("No places found");

@@ -4,9 +4,11 @@ li {
 }
 .jumbotron-title {
         color: #ffffff; 
+        font-family: 'Audiowide', cursive;
 }
 .jumbotron-subtitle {
         color: #ffffff;
+        
 }
 .header-background-image { 
     
@@ -17,11 +19,11 @@ li {
     background-size: cover;
 }
 .map-placement {
-    min-height: 300px;
+    min-height: 450px;
     
 }
 .map-size {
-    min-height: 300px;
+    min-height: 450px;
 }
 .card-title-text {
     color: #ffffff;
@@ -41,6 +43,7 @@ li {
 }
 .list-item-container {
 height: 100%;
+overflow: auto;
 }
 .list-of-gas {
     color: blue
@@ -49,33 +52,58 @@ height: 100%;
     color: #ffffff;
     background-color: blue;
 }
+.submit-margin {
+    margin: 20px;
+}
 
-@media screen and (min-width : 320px)  {
-    .list-item-container, .map-placement{
+
+@media screen and (max-width : 320px)  {
+    .list-item-container, .map-placement {
         min-height: 200px;
+        margin: 10px;
+    }
+        #map {
+        min-height: 200px;
+        margin: 10px;
     }
 }
 
-@media screen and (min-width : 480px)  {
-    .list-item-container, .map-placement{
+@media screen and (max-width : 480px)  {
+    .list-item-container, .map-placement {
         min-height: 350px;
+        margin: 15px;
+    }
+        #map {
+        min-height: 350px;
+        margin: 15px;
     }
 }
 
-@media screen and (min-width : 768px)  {
-    .list-item-container, .map-placement{
+@media screen and (max-width : 768px)  {
+    .list-item-container, .map-placement {
+        min-height: 550px;
+        margin: 25px;
+    }
+        #map {
+        min-height: 550px;
+        margin: 25px;
+    }
+}
+
+@media screen and (max-width : 1024px)  {
+    .list-item-container, .map-placement {
         min-height: 550px;
     }
-}
-
-@media screen and (min-width : 1024px)  {
-    .list-item-container, .map-placement{
+        #map {
         min-height: 550px;
     }
 }
 
 @media screen and (max-width : 1224px)  {
-    .list-item-container, .map-placement{
+    .list-item-container, .map-placement {
+        min-height: 550px;
+    }
+        #map {
         min-height: 550px;
     }
 }
