@@ -1,3 +1,7 @@
+li {
+    padding-left: 12px;
+    padding-right: 12px;
+}
 .jumbotron-title {
         color: #ffffff; 
 }
@@ -24,15 +28,19 @@
     font-size: 24px;
 }
 .table-text {
-    font-size: 16px;
+    font-size: 14px;
     color: #000000;
 }
+.table-header-text {
+    font-size: 16px;
+    color: #ffffff;
+}
 .div-scroll {
-    overflow: scroll;
-    
+    overflow: auto;
+    width: 100%; 
 }
 .list-item-container {
-max-height: 300px;
+height: 100%;
 }
 .list-of-gas {
     color: blue
@@ -41,62 +49,33 @@ max-height: 300px;
     color: #ffffff;
     background-color: blue;
 }
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+
+@media screen and (min-width : 320px)  {
     .list-item-container, .map-placement{
-        height: 200px;
-    }
-@media only screen and (min-width : 321px) {
-    .list-item-container, .map-placement{
-        height: 200px;
+        min-height: 200px;
     }
 }
-@media only screen and (max-width : 320px) {
+
+@media screen and (min-width : 480px)  {
     .list-item-container, .map-placement{
-        height: 200px;
+        min-height: 350px;
     }
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+
+@media screen and (min-width : 768px)  {
     .list-item-container, .map-placement{
-        height: 350px;
+        min-height: 550px;
     }
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+
+@media screen and (min-width : 1024px)  {
     .list-item-container, .map-placement{
-        height: 350px;
+        min-height: 550px;
     }
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+
+@media screen and (max-width : 1224px)  {
     .list-item-container, .map-placement{
-        height: 350px;
-    }
-}
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 350px;
-    }
-}
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 350px;
-    }
-}
-@media only screen  and (min-width : 1224px) {
-    .list-item-container, .map-placement{
-        height: 600px;
-    }
-}
-@media only screen  and (min-width : 1824px) {
-    .list-item-container, .map-placement{
-        height: 200px;
-    }
-}
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 200px;
-    }
-}
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 200px;
+        min-height: 550px;
     }
 }

@@ -54,7 +54,7 @@ function initMap() {
     //event when user clicks map
 	google.maps.event.addListener(map, 'click', function(event) {
 		if (appState == "place-marker")
-	   placeMarker(event.latLng);
+	    placeMarker(event.latLng);
 	});
 	//adds new markers, give them a click function and adds them to an array
 	function placeMarker(location) {
@@ -119,7 +119,8 @@ function initMap() {
     	$(this).parent().parent().find("button").text($(this).text());
     	$(this).parent().parent().find("button").attr("data-place", $(this).attr("data-place"));
 		console.log($(this));
-		numberForRestaurants = $(this).data("marker")
+		numberForRestaurants = $(this).data("marker");
+		restaurantsArr = restaurantsArr.join(" | ");
 		$("#restaurants" + numberForRestaurants).text(restaurantsArr);
 		// jQuery UI used
 		$("#restaurants" + numberForRestaurants).effect("bounce", "slow");
@@ -160,12 +161,11 @@ function callback(results, status) {
 			else {
 				open = "Call number to check hours"; 
 			}	
-			// rating func
+			// rating func for tripStop
 			if (results[i].rating) {
-				gasStationReviews = results[i].rating;
-				ratingArr.push(gasStationReviews);
+				ratingArr.push(results[i].rating);
 			}
-			// to get info from gas stations such as names
+			// to get info from gas stations such as names for dropdown button
             gasStations = {};
             gasStations.gasName = results[i].name;
             gasStations.rating = results[i].rating;
@@ -173,7 +173,7 @@ function callback(results, status) {
             gasList.push(gasStations);  
 		}
 		// rating averages, if is for if there is no rating, ignore
-		if(ratingArr) {
+		if (ratingArr) {
 			var ratingArrLength = ratingArr.length;
 			ratingArr = ratingArr.reduce((previous, current) => current += previous);
 			ratingArr /= ratingArrLength;
@@ -196,16 +196,20 @@ function callback(results, status) {
         var dropList = $("<ul>");
         dropList.addClass("dropdown-menu scrollable-menu");
         // for the list of gas places, list their rating as well
-        for (var i = 0; i < results.length; i++) {
-            var listItem = $("<li>");
-            listItem.addClass("list-of-gas");
-            listItem.append(gasList[i].gasName + ", Rating: " + gasList[i].rating + ". ");
-            listItem.attr({
-            	"data-place": gasList[i].place,
-            	"data-marker": markerNum
-        	});
-            dropList.append(listItem);
-        }
+		for (var i = 0; i < results.length; i++) {
+			var listItem = $("<li>");
+			listItem.addClass("list-of-gas");
+			if (gasList[i].rating == undefined) {
+				listItem.append(gasList[i].gasName + " | Rating: No Rating :( ");
+			} else {
+				listItem.append(gasList[i].gasName + " | Rating: " + gasList[i].rating);
+			}
+			listItem.attr({
+				"data-place": gasList[i].place,
+				"data-marker": markerNum
+			});
+			dropList.append(listItem);
+		}
         // the droplist is added to the dropdown button
         dropDown.append(dropList);
         // appends data such as ratings and dropdown to html
@@ -231,7 +235,7 @@ function callback2(results, status) {
   	restaurantsArr = [];
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       	for (var i = 0; i < results.length; i++) {
-	      	restaurantsArr.push(results[i].name + ", Rating: " + results[i].rating);
+	      	restaurantsArr.push(results[i].name + ": Rating " + results[i].rating);
 	      	$("#restaurants" + markerNum).text("");
 	    }
 	}    	
