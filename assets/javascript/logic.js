@@ -1,6 +1,3 @@
-
-
-
 // Initialize Firebase
 var config = {
 	apiKey: "AIzaSyDEnV-n5umJb0UsHTXkfWpzeXeozNhi50Y",
@@ -12,17 +9,11 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
-
-
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
 var appState = "place-marker";
-
 //an array to keep track of all the markers
 var markerNum = 0;
-
-var counter = 0;
 
 var markerList= [];
 
@@ -34,7 +25,6 @@ var gasList = [];
 
 var waypts = [];
 //hide the info tables at the bottom
-//$("#map-placement").css("display", "none");
 $("#trip-info").hide();
 
 //sets up the map
@@ -51,36 +41,31 @@ function initMap() {
           zoom: 13,
           center: {lat: 37.872133, lng: -122.271146}
     });
-
+	// displays directions
 	directionsDisplay.setMap(map);
-
+	// must be defined for map to work 
 	var service = new google.maps.places.PlacesService(map);
-
 	// what happens when you submit you A and B points. Also shows/hides interface
 	var onSubmitHandler = function() {
+		// to make sure user points are vaid
         if ($("#user-form-pointA").val()!=""&&$("#user-form-pointB").val()!=""){
        		//update UI
-       		//$("#map-placement").css("display", "inline");
        		$("#user-form-group").hide();
         	//Make Map
        		calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val());
         }
     };
-
 	//click event for making a route.
     $("#calculate-route").on("click", function(event){
     	event.preventDefault();
     	onSubmitHandler();
     	appState = "place-marker"
     });
-
     //event when user clicks map
 	google.maps.event.addListener(map, 'click', function(event) {
 		if (appState == "place-marker")
 	   placeMarker(event.latLng);
 	});
-
-
 	//adds new markers, give them a click function and adds them to an array
 	function placeMarker(location) {
 		markerNum++; 
@@ -90,73 +75,67 @@ function initMap() {
 	        label: String(markerNum),
 	        markerID: markerList.length
 	    });
-
+	    // push marker information to markerList
 	    markerList.push(marker);
-
 	    // function to get place info from markers
 	    var newLocation = {lat: markerList[markerList.length-1].position.lat(), lng: markerList[markerList.length-1].position.lng()};
 	    // gas station search
 		service.nearbySearch({
-		  
 		  	// get info on last pushed point
 		    location: newLocation,
-		    // location: {lat: 38.582, lng: -121.482},
-		    // location: latlng,
+		    // radius in meters
 		    radius: 1000,
+		    // type it looks for are gas stations
 		    type: ['gas_station']
 		}, callback);
 		// restaurant search
 		service.nearbySearch({
 		  	// get info on last pushed point
 		    location: newLocation,
-		    // location: {lat: 38.582, lng: -121.482},
-		    // location: latlng,
+		    // radius in meters
 		    radius: 5000,
+		    // type it looks for are gas stations
 		    type: ['restaurant']
 		}, callback2);
 	}
-
 	//click event for clearing all markers.
-    $("#clear-markers").on("click", function(event){
+    $("#clear-markers").on("click", function(event) {
 	    for(i=0; i<markerList.length; i++){
 	        markerList[i].setMap(null);
 	    }
+	    // waypts are essentially detours that the user can set up
 	    waypts = [];
+	    // markers are the actual objects that are created when user clicks map
 	    markerList = [];
 	    $("#gas-station-info").empty();
     });
-
-
 	// if waypoint is selected, change route
 	$(document.body).on('click', '#select', function() {
+		var address = $(this).parent().parent().find("button").attr("data-place");
+		console.log(address);
 		waypts.push({
 			location: address,
 	        stopover: true
 	    });
-		
+		// display the route on the map with waypoints
 		calculateAndDisplayRoute(directionsService, directionsDisplay, $("#user-form-pointA").val(), $("#user-form-pointB").val(), address);
 	})
-
 	// if remove button is clicked, remove body
 	$(document.body).on('click', '#remove', function() {
-		
-		// to remove marker on map
-		// eval($(this).parent().data("markerID")).setMap(null);
-		// to empty table row
 		$(this).parentsUntil("tbody").empty();
-		
 	})
-
 	$(document.body).on('click', '.list-of-gas', function() {
+		$(this).parent().parent().parent().find("#select").show();
+    	$(this).parent().parent().find("button").text($(this).text());
+    	$(this).parent().parent().find("button").attr("data-place", $(this).attr("data-place"));
 		console.log($(this));
 		numberForRestaurants = $(this).data("marker")
-
 		$("#restaurants" + numberForRestaurants).text(restaurantsArr);
+		// jQuery UI used
 		$("#restaurants" + numberForRestaurants).effect("bounce", "slow");
 	})	
 //end of init map
 }
-
 //function that takes inputs and updates the map with a route along with waypoints
 function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination, waypoints) {
     directionsService.route({
@@ -167,24 +146,19 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
         travelMode: 'DRIVING'
     }, function(response, status) {
         if (status === 'OK') {
-        	debugger;
             directionsDisplay.setDirections(response);
         } else {
-        	
             console.log('Directions request failed due to ' + status);
         }
     });
 }
-
 // appends info of gas station review, location, overall TripStop review, and collapse button including restaurant information
 function callback(results, status) {
-  	
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
         	// results[i] is one gas station 
-	   		debugger;
-			
 			address = results[i].vicinity;
+			// if its open
 			if ("opening_hours" in results[i]){
 				if (results[i].opening_hours.open_now) {
 					open = "Open Now";
@@ -196,24 +170,18 @@ function callback(results, status) {
 			else {
 				open = "Call number to check hours"; 
 			}	
-			// distance = results.placeid compares with point A placeid OR us results.geometry.location.lat()
-			
 			// rating func
 			if (results[i].rating) {
 				gasStationReviews = results[i].rating;
 				ratingArr.push(gasStationReviews);
 			}
-			gasStations = "";
-
+			// to get info from gas stations such as names
             gasStations = {};
-
             gasStations.gasName = results[i].name;
             gasStations.rating = results[i].rating;
-            gasStations.place = results[i].place_id;
-
+            gasStations.place = results[i].vicinity;
             gasList.push(gasStations);  
 		}
-
 		// rating averages, if is for if there is no rating, ignore
 		if(ratingArr) {
 			var ratingArrLength = ratingArr.length;
@@ -236,28 +204,27 @@ function callback(results, status) {
         dropDown.append(btn);
         var dropList = $("<ul>");
         dropList.addClass("dropdown-menu scrollable-menu");
-
+        // for the list of gas places, list their rating as well
         for (var i = 0; i < results.length; i++) {
             var listItem = $("<li>");
             listItem.addClass("list-of-gas");
-            listItem.append(gasList[i].gasName + ", Rating: " + gasList[i].rating);
+            listItem.append(gasList[i].gasName + ", Rating: " + gasList[i].rating + ". ");
             listItem.attr({
             	"data-place": gasList[i].place,
             	"data-marker": markerNum
         	});
             dropList.append(listItem);
         }
-
+        // the droplist is added to the dropdown button
         dropDown.append(dropList);
-
+        // appends data such as ratings and dropdown to html
 		tableTr = $("<tr>");
 		tableTr.append("<td>" + markerNum + "</td>");
 	    tableTr.append("<td>" + ratingArr + "</td>");
 	    tableTr.append("<td>" + dropDown[0].innerHTML + "</td>");
 	    tableTr.append("<td id='restaurants" + markerNum + "'></td>");
-	    debugger;
 	    tableTr.append("<td><button id='select' class='btn btn-info' type='button'>✓</button><button id='remove' class='btn btn-danger' type='button'>X</button></td>");
-		
+		tableTr.find("#select").hide();
 		// append to html id train table
 		$("#gas-station-info").append(tableTr);	 
 		// to clear ratingArrLength 
@@ -265,22 +232,19 @@ function callback(results, status) {
 		gasList = []; 
 	}
 	else {
-		console.log("Error");
+		console.log("No places found");
 	}
 }
-
 // to add restaurants to page
 function callback2(results, status) {
   	restaurantsArr = [];
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       	for (var i = 0; i < results.length; i++) {
-	   		debugger;
 	      	restaurantsArr.push(results[i].name + ", Rating: " + results[i].rating);
 	      	$("#restaurants" + markerNum).text("");
-	      	debugger;
 	    }
 	}    	
 	else {
-		console.log("Error");
+		console.log("No places found");
 	}
 }
