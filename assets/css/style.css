@@ -1,38 +1,51 @@
+li {
+    padding-left: 12px;
+    padding-right: 12px;
+}
 .jumbotron-title {
-        color: #ffffff; 
+    color: #ffffff; 
+    font-family: 'Audiowide', cursive;
+}
+.log-out-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
 }
 .jumbotron-subtitle {
-        color: #ffffff;
+    color: #ffffff;     
 }
 .header-background-image { 
-    
     background-image: url("https://media.deseretdigital.com/file/7b1afa8729?type=jpeg&quality=55&c=15&a=4379240d");
-    height: 100%; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 200px;
 }
 .map-placement {
-    min-height: 300px;
-    
+    min-height: 450px;
 }
 .map-size {
-    min-height: 300px;
+    min-height: 450px;
 }
 .card-title-text {
     color: #ffffff;
     font-size: 24px;
 }
 .table-text {
-    font-size: 16px;
+    font-size: 14px;
     color: #000000;
 }
+.table-header-text {
+    font-size: 16px;
+    color: #ffffff;
+}
 .div-scroll {
-    overflow: scroll;
-    
+    overflow: auto;
+    width: 100%; 
 }
 .list-item-container {
-max-height: 300px;
+    max-height: 500px;
+    overflow: auto;
 }
 .list-of-gas {
     color: blue
@@ -41,62 +54,63 @@ max-height: 300px;
     color: #ffffff;
     background-color: blue;
 }
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-    .list-item-container, .map-placement{
-        height: 200px;
+.submit-margin {
+    margin: 20px;
+}
+.modal-background {
+   background-color: #d0d9e8;
+   opacity: 30%;
+}
+.card-margin {
+    margin-top: 25px;
+}
+@media screen and (max-width : 320px)  {
+    .list-item-container, .map-placement {
+        min-height: 200px;
+        margin: 10px;
     }
-@media only screen and (min-width : 321px) {
-    .list-item-container, .map-placement{
-        height: 200px;
+        #map {
+        min-height: 200px;
+        margin: 10px;
     }
 }
-@media only screen and (max-width : 320px) {
-    .list-item-container, .map-placement{
-        height: 200px;
+
+@media screen and (max-width : 480px)  {
+    .list-item-container, .map-placement {
+        min-height: 350px;
+        margin: 15px;
+    }
+        #map {
+        min-height: 350px;
+        margin: 15px;
     }
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
-    .list-item-container, .map-placement{
-        height: 350px;
+
+@media screen and (max-width : 768px)  {
+    .list-item-container, .map-placement {
+        min-height: 550px;
+        margin: 25px;
+    }
+        #map {
+        min-height: 550px;
+        margin: 25px;
     }
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-    .list-item-container, .map-placement{
-        height: 350px;
+
+@media screen and (max-width : 1024px)  {
+    .list-item-container, .map-placement {
+        min-height: 550px;
+    }
+        #map {
+        min-height: 550px;
     }
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-    .list-item-container, .map-placement{
-        height: 350px;
+
+@media screen and (max-width : 1224px)  {
+    .list-item-container, .map-placement {
+        min-height: 550px;
     }
-}
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 350px;
-    }
-}
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 350px;
-    }
-}
-@media only screen  and (min-width : 1224px) {
-    .list-item-container, .map-placement{
-        height: 600px;
-    }
-}
-@media only screen  and (min-width : 1824px) {
-    .list-item-container, .map-placement{
-        height: 200px;
-    }
-}
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 200px;
-    }
-}
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
-    .list-item-container, .map-placement{
-        height: 200px;
+        #map {
+        min-height: 550px;
     }
 }
