@@ -3,21 +3,18 @@ li {
     padding-right: 12px;
 }
 jumbotron-title {
-        color: #ffffff; 
-        font-family: 'Audiowide', cursive;
+    color: #ffffff; 
+    font-family: 'Audiowide', cursive;
 }
 .jumbotron-subtitle {
-        color: #ffffff;
-        
+    color: #ffffff;     
 }
 .header-background-image { 
-    
     background-image: url("https://media.deseretdigital.com/file/7b1afa8729?type=jpeg&quality=55&c=15&a=4379240d");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     height: 200px;
-
 }
 .map-placement {
     min-height: 450px;
@@ -42,8 +39,8 @@ jumbotron-title {
     width: 100%; 
 }
 .list-item-container {
-max-height: 500px;
-overflow: auto;
+    max-height: 500px;
+    overflow: auto;
 }
 .list-of-gas {
     color: blue
