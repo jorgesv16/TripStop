@@ -8,6 +8,58 @@ var config = {
 	messagingSenderId: "942613125163"
 };
 firebase.initializeApp(config);
+
+//ACCOUNT VERIFICATION
+
+//login
+$("#loginBtn").on("click", function(){
+	$('#loginBtn').hide();
+	$('#newLoginBtn').hide();
+    firebase.auth().signInWithEmailAndPassword($("#userEmail").val(), $("#userPassword").val()).catch(function(error) {
+		// Handle ErrorsS here.
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		$("#loginMessage").html(errorMessage);
+		$('#loginBtn').show();
+		$('#newLoginBtn').show();
+	});
+})
+    // new account
+$("#newLoginBtn").on("click", function(){
+    $('#loginBtn').hide();
+    $('#newLoginBtn').hide();	
+    firebase.auth().createUserWithEmailAndPassword($("#userEmail").val(), $("#userPassword").val()).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      $("#loginMessage").html(errorMessage);
+      $('#loginBtn').show();
+      $('#newLoginBtn').show();
+    });
+})
+
+firebase.auth().onAuthStateChanged(function(user) {
+      if (user){
+          window.user=user;
+          $("#loginModal").modal('toggle');
+    } else{
+        $("#loginModal").modal({
+            show: true
+            })
+    }
+});
+
+$("#signOutBtn").on("click", function(){
+    firebase.auth().signOut().then(function() {
+          $("#loginModal").modal({
+            show: true
+        });
+    }).catch(function(error) {
+      // An error happened.
+    });
+})
+
+//END ACCOUNT VERIFICATION
 //keeps track of step of the process. We start on step "directions"
 //steps: directions, place-marker, select-station
 var appState = "place-marker";
