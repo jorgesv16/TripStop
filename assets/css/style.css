@@ -2,7 +2,7 @@ li {
     padding-left: 12px;
     padding-right: 12px;
 }
-.jumbotron-title {
+jumbotron-title {
         color: #ffffff; 
         font-family: 'Audiowide', cursive;
 }
@@ -13,14 +13,14 @@ li {
 .header-background-image { 
     
     background-image: url("https://media.deseretdigital.com/file/7b1afa8729?type=jpeg&quality=55&c=15&a=4379240d");
-    height: 100%; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 200px;
+
 }
 .map-placement {
     min-height: 450px;
-    
 }
 .map-size {
     min-height: 450px;
@@ -42,7 +42,7 @@ li {
     width: 100%; 
 }
 .list-item-container {
-height: 100%;
+max-height: 500px;
 overflow: auto;
 }
 .list-of-gas {
@@ -55,8 +55,13 @@ overflow: auto;
 .submit-margin {
     margin: 20px;
 }
-
-
+.modal-background {
+   background-color: #d0d9e8;
+   opacity: 30%;
+}
+.card-margin {
+    margin-top: 25px;
+}
 @media screen and (max-width : 320px)  {
     .list-item-container, .map-placement {
         min-height: 200px;
